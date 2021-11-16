@@ -36,6 +36,8 @@ int main()
 	}
 	//создается вектор критериев и заполняются поля id
 	std::vector<hierarchyMember> hierarchyMembers(criterionNumber);
+	//введеная матрица
+	std::vector<float> matrix(criterionNumber * criterionNumber);
 	for (size_t i = 0; i < hierarchyMembers.size(); i++)
 	{
 		std::string name;
@@ -53,6 +55,12 @@ int main()
 			if (j == i)
 			{
 				valueSum++;
+				matrix.at(i * criterionNumber + j) = 1;
+			}
+			else if (j < i) 
+			{
+				matrix.at(i * criterionNumber + j) = 1 / matrix.at(j * criterionNumber + i);
+				valueSum += matrix.at(i * criterionNumber + j);
 			}
 			else
 			{
@@ -70,6 +78,7 @@ int main()
 					else break;
 				}
 				valueSum += value;
+				matrix.at(i * criterionNumber + j) = value;
 			}
 		}
 		hierarchyMembers.at(i).value = valueSum;
@@ -79,10 +88,6 @@ int main()
 	for (auto& element : hierarchyMembers)
 	{
 		element.value = element.value / sum;
-	}
-	//вывод
-	for (const auto& element : hierarchyMembers)
-	{
 		std::cout << element.id << " = " << round(element.value * 100) / 100 << std::endl;
 	}
 	return 0;
